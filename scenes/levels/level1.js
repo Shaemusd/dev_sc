@@ -26,6 +26,26 @@ export default class Level1 extends BaseScene {
             font: '20px Arial',
             fill: '#fff'
         });
+
+// 🪵 PLATFORMS
+this.platforms = this.physics.add.staticGroup();
+
+// Optional: Decorative ground tile row
+for (let x = 0; x < 800; x += 64) {
+    this.platforms.create(x, 568, 'ground').setScale(0.5).refreshBody();
+}
+
+// ✅ Floating platform (clean, visible, sized)
+const platform = this.platforms.create(30, 410, 'platform');
+platform.setScale(1).refreshBody();
+platform.body.setSize(400, 62);
+platform.body.setOffset(100, 0);
+
+this.physics.add.collider(this.player, this.platforms);
+        
+
+        this.physics.world.createDebugGraphic();
+this.physics.world.drawDebug = true;
     }
 
     update() {

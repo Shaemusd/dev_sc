@@ -1,6 +1,8 @@
 // game.js
 
 import Level1 from './scenes/levels/level1.js';
+// import Level2 from './scenes/levels/level2.js';
+// import Level3 from './scenes/levels/level3.js';
 
 const config = {
     type: Phaser.AUTO,

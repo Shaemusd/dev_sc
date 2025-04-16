@@ -12,7 +12,7 @@ export default class BaseScene extends Phaser.Scene {
 
         this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
         this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
-        this.load.image('sky', 'https://labs.phaser.io/assets/skies/sky4.png');
+        // this.load.image('sky', 'https://labs.phaser.io/assets/skies/sky4.png');
 
 
         // Fireball projectile (Charge.png)
@@ -47,7 +47,7 @@ export default class BaseScene extends Phaser.Scene {
     create() {
         this.currentAnim = null;
         this.facing = 'right';
-        this.add.image(400, 300, 'sky').setScrollFactor(0); // 800x600 center
+        // this.add.image(400, 300, 'sky').setScrollFactor(0); // 800x600 center
         this.isCasting = false;
 
         // Create the animation ONCE at game start
@@ -176,7 +176,7 @@ export default class BaseScene extends Phaser.Scene {
 
         // Jumping
         if (this.keys.jump.isDown && isTouchingGround) {
-            this.player.setVelocityY(-430);
+            this.player.setVelocityY(-438);
             this.setPlayerAnimation('wizard-jump');
         }
 

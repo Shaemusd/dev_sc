@@ -12,22 +12,22 @@ export default class Level1 extends BaseScene {
     preload() {
         // Call the BaseScene's preload() to load common assets
         super.preload();
+        // in your scene's preload()
+        this.load.image('level1_tiles', 'tiles/level1_image.png');
         this.load.spritesheet('slime', 'assets/sprites/enemies/slime.jpg', {
             frameWidth: 48,
             frameHeight: 48
         });
-        this.load.tilemapTiledJSON('level1', 'assets/maps/level1.json');
-        this.load.image('tiles', 'assets/tiles/tileset.png');
-        // Load any Level1-specific assets here, e.g.:
-        // this.load.image('enemy', 'assets/sprites/enemy.png');
+
+
     }
 
     create() {
-        
+
 
         // Call the BaseScene's create() for player setup, input, etc.
         super.create();
-
+        this.add.image(0, 0, 'level1_tiles');
         this.anims.create({
             key: 'slime-idle',
             frames: this.anims.generateFrameNumbers('slime', { start: 0, end: 11 }),
@@ -45,10 +45,10 @@ export default class Level1 extends BaseScene {
         // 🪵 PLATFORMS
         this.platforms = this.physics.add.staticGroup();
 
-        
-
-
-
+        // Optional: Decorative ground tile row
+        for (let x = 0; x < 800; x += 64) {
+            this.platforms.create(x, 568, 'ground').setScale(0.5).refreshBody();
+        }
 
         // ✅ Floating platform (clean, visible, sized)
         const platform = this.platforms.create(30, 410, 'platform');

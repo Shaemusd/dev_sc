@@ -34,7 +34,7 @@ export default class Level1 extends BaseScene {
 
         // Call the BaseScene's create() for player setup, input, etc.
         super.create();
-        this.add.image(1600, 280, 'level1_tiles')
+        this.add.image(1600, 320, 'level1_tiles')
             .setDepth(-1);
 
         // 1) build the Tilemap
@@ -49,7 +49,7 @@ export default class Level1 extends BaseScene {
 
         // 3) create your layers in the same order Tiled intended
         // Background first, so it ends up at the back:
-        map.createLayer('Background', [bgSet], 0, -50).setDepth(-3);
+        map.createLayer('Background', [bgSet], 0, 0).setDepth(-3);
 
         // Platforms in the middle—also turn on collisions by property:
         // map.createLayer('Platforms', [tileSet], 0, -40)
@@ -68,7 +68,7 @@ export default class Level1 extends BaseScene {
             repeat: -1
         });
         const platformsLayer = map
-            .createLayer('Platforms', [tileSet], 0, -40)   // use y=0 unless you really need an offset
+            .createLayer('Platforms', [tileSet], 0, 0)   // use y=0 unless you really need an offset
             .setDepth(1)
             .setCollisionByProperty({ collides: true });
 
@@ -81,8 +81,28 @@ export default class Level1 extends BaseScene {
         // 🪵 PLATFORMS
         // this.platforms = this.physics.add.staticGroup();
 
+        // 2) expand the physics world to match your map size
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+        // 3) make sure your player actually collides with the world bounds
+        this.player.setCollideWorldBounds(true);
+
+        // 4) set up the camera to match that world & follow the player
+        this.cameras.main
+            .setBounds(0, 0, map.widthInPixels, map.heightInPixels)
+            .startFollow(this.player, false, 1, 1);
 
 
+        // Tell the camera how big the world is:
+        this.cameras.main.setBounds(
+            0,
+            0,
+            map.widthInPixels,
+            map.heightInPixels
+        );
+
+        // Lock the camera onto the player — the lerp values 1,1 make it track exactly:
+        this.cameras.main.startFollow(this.player, false, 1, 1);
 
 
 
@@ -93,7 +113,8 @@ export default class Level1 extends BaseScene {
         // Add collider
 
         this.physics.add.collider(this.enemy, platformsLayer);
-        this.physics.add.collider(this.player, platformsLayer, this.onPlayerHit, null, this); }
+        this.physics.add.collider(this.player, platformsLayer, this.onPlayerHit, null, this);
+    }
 
     update() {
         // Call BaseScene's update() for movement

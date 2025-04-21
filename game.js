@@ -6,7 +6,7 @@ import Level1 from './scenes/levels/level1.js';
 
 const config = {
     type: Phaser.AUTO,
-    width: 3200,
+    width: 800,
     height: 590,
     backgroundColor: '#1d212d',
     physics: {

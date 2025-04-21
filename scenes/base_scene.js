@@ -9,7 +9,10 @@ export default class BaseScene extends Phaser.Scene {
     preload() {
         // Load assets that all scenes need
         // For example, a placeholder player sprite
-
+        this.load.image(
+            'hamburger',
+            'https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/svg/menu-outline.svg'
+        );
         this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
         this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
         // this.load.image('sky', 'https://labs.phaser.io/assets/skies/sky4.png');
@@ -49,7 +52,7 @@ export default class BaseScene extends Phaser.Scene {
         this.facing = 'right';
         // this.add.image(400, 300, 'sky').setScrollFactor(0); // 800x600 center
         this.isCasting = false;
-
+        const { width, height } = this.scale;
         // Create the animation ONCE at game start
         // Walk animation
         this.anims.create({
@@ -125,6 +128,76 @@ export default class BaseScene extends Phaser.Scene {
 
 
 
+
+        
+        // Create a camera‑fixed container centered on screen for menu items (hidden by default)
+        this.menuContainer = this.add.container(width / 2, height / 2)
+            .setScrollFactor(0)
+            .setDepth(4)
+            .setVisible(false)
+            .setScrollFactor(0);
+
+
+        // Debug dimensions for buttons
+        const btnWidth = 200;
+        const btnHeight = 50;
+
+        // Resume Button background (hitbox)
+        const resumeBg = this.add.rectangle(0, -125, btnWidth, btnHeight, 0x00ff00, 0)
+            .setOrigin(0.5)
+            .setDepth(5)
+            .setInteractive()
+            .setScrollFactor(0);
+
+        resumeBg.on('pointerdown', () => {
+            this.menuContainer.setVisible(false);
+            this.physics.world.resume();
+        });
+
+        // Resume Text
+        const resumeText = this.add.text(0, -130, 'Resume', {
+            fontSize: '32px', fill: '#000', fontStyle: 'bold'
+        }).setOrigin(0.5).setDepth(5);
+
+        // Exit Button background (hitbox)
+        const exitBg = this.add.rectangle(0, -35, btnWidth, btnHeight, 0x00ff00, 0)
+            .setOrigin(0.5)
+            .setInteractive()
+            .setScrollFactor(0);
+            
+        exitBg.on('pointerdown', () => {
+            this.scene.start('HomeScene');
+        });
+
+        // Exit Text
+        const exitText = this.add.text(0, -40, 'Exit', {
+            fontSize: '32px', fill: '#000', fontStyle: 'bold'
+        }).setOrigin(0.5).setDepth(5).setScrollFactor(0);
+
+
+        // Add backgrounds and texts to the container
+        this.menuContainer.add([resumeBg, resumeText, exitBg, exitText]);
+
+        // Create the hamburger icon fixed to camera
+        this.hamburger = this.add.image(20, 20, 'hamburger')
+        .setScrollFactor(0)
+        .setOrigin(0)
+        .setInteractive()
+        .setDepth(12)
+        .setScale(0.25); // if you need to blow it up a bit
+
+        this.hamburger.on('pointerdown', () => {
+            // Toggle menu visibility
+            const show = !this.menuContainer.visible;
+            this.menuContainer.setVisible(show);
+            if (show) {
+                // Pause physics only, keep UI interactive
+                this.physics.world.pause();
+            } else {
+                // Resume physics when menu closed
+                this.physics.world.resume();
+            }
+        });
 
 
 

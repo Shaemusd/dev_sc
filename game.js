@@ -1,8 +1,9 @@
 // game.js
 
 import Level1 from './scenes/levels/level1.js';
-// import Level2 from './scenes/levels/level2.js';
-// import Level3 from './scenes/levels/level3.js';
+import LevelSelectScene from './scenes/menus/level_select_scene.js';
+import HomeScene from './scenes/menus/home_scene.js';
+// import SettingsScene from './scenes/menus/settings_scene.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -27,7 +28,7 @@ const config = {
         }
     },
     // List your scenes here. Phaser will load them in this array order.
-    scene: [Level1]
+    scene: [ HomeScene, Level1, LevelSelectScene]
 };
 
 const game = new Phaser.Game(config);

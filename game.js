@@ -6,8 +6,8 @@ import Level1 from './scenes/levels/level1.js';
 
 const config = {
     type: Phaser.AUTO,
-    width: 1000,
-    height: 600,
+    width: 3200,
+    height: 590,
     backgroundColor: '#1d212d',
     physics: {
         default: 'arcade',

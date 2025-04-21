@@ -101,7 +101,8 @@ export default class BaseScene extends Phaser.Scene {
         // Create the player
         this.player = this.physics.add.sprite(400, 300, 'wizard-idle');
         this.player.setCollideWorldBounds(true);
-        this.player.setOrigin(0.5, 1); // centers X and anchors Y at feet
+        this.player.setOrigin(0.5, 1)
+        .setDepth(1); // centers X and anchors Y at feet
 
 
         // 🔧 Set a better-sized physics body
@@ -111,7 +112,7 @@ export default class BaseScene extends Phaser.Scene {
         this.ground = this.physics.add.staticGroup();
 
         // Big solid floor
-        this.ground.create(400, 580, 'ground').setScale(100, 1).refreshBody();
+        // this.ground.create(400, 580, 'ground').setScale(100, 1).refreshBody();
 
         // Add collider
         this.physics.add.collider(this.player, this.ground);
@@ -248,7 +249,7 @@ export default class BaseScene extends Phaser.Scene {
 
     updatePlayerFlipAndOffset(facingLeft) {
         this.player.setFlipX(facingLeft);
-
+        
         const hitboxWidth = 30;      // match this to setSize()
         const offsetRight = 35;      // where the hitbox starts on right-facing
         const offsetY = 48;

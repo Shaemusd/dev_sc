@@ -102,7 +102,7 @@ export default class BaseScene extends Phaser.Scene {
         this.player = this.physics.add.sprite(400, 300, 'wizard-idle');
         this.player.setCollideWorldBounds(true);
         this.player.setOrigin(0.5, 1)
-        .setDepth(1); // centers X and anchors Y at feet
+            .setDepth(1); // centers X and anchors Y at feet
 
 
         // 🔧 Set a better-sized physics body
@@ -111,8 +111,6 @@ export default class BaseScene extends Phaser.Scene {
         // 🧱 Create GROUND (base floor)
         this.ground = this.physics.add.staticGroup();
 
-        // Big solid floor
-        // this.ground.create(400, 580, 'ground').setScale(100, 1).refreshBody();
 
         // Add collider
         this.physics.add.collider(this.player, this.ground);
@@ -137,9 +135,6 @@ export default class BaseScene extends Phaser.Scene {
             jump: 'SPACE',
             castFireball: 'ONE'
         });
-        // Add colliders AFTER everything is defined
-        this.physics.add.collider(this.fireballs, this.ground, this.onFireballHit, null, this);
-        this.physics.add.collider(this.fireballs, this.platforms, this.onFireballHit, null, this);
 
     }
 
@@ -249,7 +244,7 @@ export default class BaseScene extends Phaser.Scene {
 
     updatePlayerFlipAndOffset(facingLeft) {
         this.player.setFlipX(facingLeft);
-        
+
         const hitboxWidth = 30;      // match this to setSize()
         const offsetRight = 35;      // where the hitbox starts on right-facing
         const offsetY = 48;
@@ -270,8 +265,6 @@ export default class BaseScene extends Phaser.Scene {
         }
     }
 
-    onFireballHit(fireball, surface) {
-        console.log('Fireball hit:', surface.texture.key); // Optional debug log
-        fireball.destroy(); // Or disableBody(true, true) if you want to pool
-    }
+
 }
+

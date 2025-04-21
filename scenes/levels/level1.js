@@ -101,6 +101,17 @@ export default class Level1 extends BaseScene {
             map.heightInPixels
         );
 
+        this.physics.add.collider( ///                                                                         ?///////////////
+            this.fireballs,
+            platformsLayer,
+            this.enemy,
+            this.onFireballHitTile,
+            null,
+            this
+        );
+
+
+
         // Lock the camera onto the player — the lerp values 1,1 make it track exactly:
         this.cameras.main.startFollow(this.player, false, 1, 1);
 
@@ -108,22 +119,46 @@ export default class Level1 extends BaseScene {
 
         this.physics.world.createDebugGraphic();
         this.physics.world.drawDebug = true;
-        this.physics.add.collider(this.fireballs, platformsLayer, this.onFireballHit, null, this); this.enemy = new EnemySlime(this, 300, 500);
+        this.physics.add.collider(this.fireballs, platformsLayer, this.onFireballHit, null, this);
 
         // Add collider
-
+        this.enemy = new EnemySlime(this, 300, 500, this.player);
+        this.physics.add.collider(
+            this.fireballs,
+            this.enemy,
+            this.onFireballHitEnemy,  // inherited from BaseScene
+            null,
+            this                      // ensure `this` is your scene, so it finds the handler
+        );
         this.physics.add.collider(this.enemy, platformsLayer);
         this.physics.add.collider(this.player, platformsLayer, this.onPlayerHit, null, this);
     }
 
-    update() {
-        // Call BaseScene's update() for movement
-        super.update();
+    update(time, delta) {
+        // 1) Let BaseScene handle player movement, camera, etc.
+        super.update(time, delta);
 
-        // Add any Level1-specific update logic here
+        // 2) Now update your slime’s AI
+        if (this.enemy) {
+            this.enemy.update(time, delta);
+        }
+
+        // Any other per‑frame Level1 logic goes here…
     }
-    onPlayerHit(player, enemy) {
-        console.log('Player hit!');
-        // maybe knockback, reduce HP, etc
+
+
+
+
+    onFireballHitTile(fireball, tile) { //////////////////////////                                               //////?
+        console.log('Fireball hit wall at:', tile.x, tile.y);
+        fireball.destroy();
+    }
+
+    // 2️⃣ When a fireball hits an enemy
+    onFireballHitEnemy(enemy, fireball) {
+        console.log('🔥 hit callback – enemy =', enemy, 'takeDamage?', typeof enemy.takeDamage);
+
+        fireball.destroy();
+        enemy.takeDamage(1);
     }
 }

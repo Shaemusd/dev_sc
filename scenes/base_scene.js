@@ -77,6 +77,9 @@ export default class BaseScene extends Phaser.Scene {
             frameRate: 3, // higher frame rate for a snappier jump, adjust to taste
             repeat: 0 // still non-looping — only plays once per jump
         });
+        this.jumpCount = 0;
+        // the maximum number of jumps allowed (1st jump + 1 midair jump)
+        this.maxJumps = 2;
 
         // Fireball cast animation
         this.anims.create({
@@ -129,7 +132,7 @@ export default class BaseScene extends Phaser.Scene {
 
 
 
-        
+
         // Create a camera‑fixed container centered on screen for menu items (hidden by default)
         this.menuContainer = this.add.container(width / 2, height / 2)
             .setScrollFactor(0)
@@ -164,7 +167,7 @@ export default class BaseScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setInteractive()
             .setScrollFactor(0);
-            
+
         exitBg.on('pointerdown', () => {
             this.scene.start('HomeScene');
         });
@@ -180,11 +183,11 @@ export default class BaseScene extends Phaser.Scene {
 
         // Create the hamburger icon fixed to camera
         this.hamburger = this.add.image(20, 20, 'hamburger')
-        .setScrollFactor(0)
-        .setOrigin(0)
-        .setInteractive()
-        .setDepth(12)
-        .setScale(0.25); // if you need to blow it up a bit
+            .setScrollFactor(0)
+            .setOrigin(0)
+            .setInteractive()
+            .setDepth(12)
+            .setScale(0.25); // if you need to blow it up a bit
 
         this.hamburger.on('pointerdown', () => {
             // Toggle menu visibility
@@ -214,6 +217,11 @@ export default class BaseScene extends Phaser.Scene {
 
     update() {
         const isTouchingGround = this.player.body.blocked.down || this.player.body.touching.down;
+        
+
+        if (isTouchingGround) {
+            this.jumpCount = 0;
+        }
         if (this.isCasting) return;
 
         let moving = false;
@@ -244,10 +252,12 @@ export default class BaseScene extends Phaser.Scene {
 
 
         // Jumping
-        if (this.keys.jump.isDown && isTouchingGround) {
+        if (Phaser.Input.Keyboard.JustDown(this.keys.jump) && this.jumpCount < this.maxJumps) {
             this.player.setVelocityY(-438);
             this.setPlayerAnimation('wizard-jump');
-        }
+            
+            this.jumpCount++;
+          }
 
         // In-air logic
         if (!isTouchingGround && this.currentAnim !== 'wizard-jump') {

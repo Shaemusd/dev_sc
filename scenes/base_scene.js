@@ -50,6 +50,9 @@ export default class BaseScene extends Phaser.Scene {
     create() {
         this.currentAnim = null;
         this.facing = 'right';
+        this.maxHp = 5;
+        this.playerHp = this.maxHp;
+
         // this.add.image(400, 300, 'sky').setScrollFactor(0); // 800x600 center
         this.isCasting = false;
         const { width, height } = this.scale;
@@ -140,6 +143,15 @@ export default class BaseScene extends Phaser.Scene {
             .setVisible(false)
             .setScrollFactor(0);
 
+        // keep the UI fixed to the camera:
+        this.hpText = this.add
+            .text(20, 50, `HP: ${this.playerHp}/${this.maxHp}`, {
+                font: '20px Arial',
+                fill: '#ff0000'
+            })
+            .setScrollFactor(0) // so it doesn’t move with the world
+            .setDepth(10);
+
 
         // Debug dimensions for buttons
         const btnWidth = 200;
@@ -217,7 +229,7 @@ export default class BaseScene extends Phaser.Scene {
 
     update() {
         const isTouchingGround = this.player.body.blocked.down || this.player.body.touching.down;
-        
+
 
         if (isTouchingGround) {
             this.jumpCount = 0;
@@ -255,9 +267,9 @@ export default class BaseScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.keys.jump) && this.jumpCount < this.maxJumps) {
             this.player.setVelocityY(-438);
             this.setPlayerAnimation('wizard-jump');
-            
+
             this.jumpCount++;
-          }
+        }
 
         // In-air logic
         if (!isTouchingGround && this.currentAnim !== 'wizard-jump') {
@@ -323,6 +335,11 @@ export default class BaseScene extends Phaser.Scene {
         if (this.currentAnim === 'wizard-cast-fireball') return;
 
 
+    }
+
+    updateHp(amount) {
+        this.playerHp = Phaser.Math.Clamp(this.playerHp + amount, 0, this.maxHp);
+        this.hpText.setText(`HP: ${this.playerHp}/${this.maxHp}`);
     }
 
     updatePlayerFlipAndOffset(facingLeft) {

@@ -179,7 +179,7 @@ export default class Level1 extends BaseScene {
         super.update(time, delta);
         this.enemy?.update(time, delta);
         if (this.playerHp <= 0) {
-            this.scene.restart();
+            // this.scene.restart();
             return;   // bail out so you don’t run any more logic this frame
         }
         // 2) Now update your slime’s AI
